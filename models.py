@@ -18,11 +18,11 @@ class People(Base):
     def __repr__(self):
         return f"Person: {self.name}"
 
-    def save_person(self):
+    def save(self):
         db_session.add(self)
         db_session.commit()
 
-    def delete_person(self):
+    def delete(self):
         db_session.delete(self)
         db_session.commit()
 
@@ -37,11 +37,11 @@ class Activities(Base):
     def __repr__(self):
         return f"Acitivity: {self.name}"
 
-    def save_activity(self):
+    def save(self):
         db_session.add(self)
         db_session.commit()
 
-    def delete_activity(self):
+    def delete(self):
         db_session.delete(self)
         db_session.commit()
 
