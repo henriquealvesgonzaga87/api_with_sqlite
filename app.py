@@ -1,12 +1,32 @@
 from flask import Flask, request
 from flask_restful import Resource, Api
-from models import People, Activities
+from models import People, Activities, User
+from flask_httpauth import HTTPBasicAuth
 
+auth = HTTPBasicAuth()
 app = Flask(__name__)
 api = Api(app)
 
+#USER ={
+#    "Henrique": "123",
+#    "Gonzaga": "321"
+#}
+
+
+#@auth.verify_password
+#def verification(login, pasw):
+#    if not (login, pasw):
+#        return False
+#    return USER.get(login) == pasw
+
+@auth.verify_password
+def verification(login, password):
+    if not (login, password):
+        return False
+    return User.query.filter_by(login=login, password=password).first()
 
 class Person(Resource):
+    @auth.login_required
     def get(self, name):
         person = People.query.filter_by(name=name).first()
         try:
@@ -47,11 +67,13 @@ class Person(Resource):
 
 class ListPeople(Resource):
 
+    @auth.login_required
     def get(self):
         filters = People.query.all()
         response = [{"id": i.id, "name": i.name, "age": i.age} for i in filters]
         return response
 
+    @auth.login_required
     def post(self):
         datas = request.json
         person = People(name=datas['name'], age=datas['age'])
@@ -66,11 +88,13 @@ class ListPeople(Resource):
 
 class ListActivities(Resource):
 
+    @auth.login_required
     def get(self):
         activities = Activities.query.all()
         response = [{"id": i.id, "name_activities": i.name_activities, "person": i.person.name}for i in activities]
         return response
 
+    @auth.login_required
     def post(self):
         datas = request.json
         person = People.query.filter_by(name=datas["person"]).first()
