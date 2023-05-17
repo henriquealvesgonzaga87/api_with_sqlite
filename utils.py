@@ -1,4 +1,4 @@
-from models import People
+from models import People, User
 
 
 def create_person():
@@ -27,8 +27,21 @@ def delete_person():
     person.delete()
 
 
+def insert_user(login, password):
+    user = User(login=login, password=password)
+    user.save()
+
+
+def read_all_users():
+    users = User.query.all()
+    print(users)
+
+
 if __name__ == "__main__":
-    create_person()
+    insert_user("henrique", "1234")
+    insert_user("gonzaga", "4321")
+    read_all_users()
+    #create_person()
     #update_person()
     #delete_person()
-    read_person()
+    #read_person()
